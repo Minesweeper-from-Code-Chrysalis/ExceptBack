@@ -1,4 +1,6 @@
 .idea/
 .vscode/
-node_modules/
 build/
+config/
+node_modules/
+debug.log
