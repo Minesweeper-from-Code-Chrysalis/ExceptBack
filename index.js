@@ -52,7 +52,7 @@ app.get("/shops",async function(req,res) {
     const keyword=req.query.keyword;
     const exceptWord=req.query.exceptWord;
  
-    const URL="https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3"
+    const URL="https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3&hit_per_page=100"
     let str="";
     if(areaCode===undefined){
         res.sendStatus(400);
@@ -61,7 +61,7 @@ app.get("/shops",async function(req,res) {
         console.log(keyword);
     }else{
         console.log(keyword);
-        str = "&areacode_s="+areaCode+"&freeword="+encodeURIComponent(keyword);
+        str = "&areacode_l="+areaCode+"&freeword="+encodeURIComponent(keyword);
     }
 
     const r =await fetch(URL+str);
