@@ -8,8 +8,9 @@ app.get("/", function (req, res) {
 });
 
 app.post("/create", function (req, res) {
-    db.TestClass.create({
-        attr1: "test",
+    db.Test.create({
+        shopid: '6956991',
+        uwasa:"汚い"
     }).then(() => {
         res.send("Data Created.");
     });
@@ -38,16 +39,46 @@ app.get("/shops",async function(req,res) {
     }else{
         console.log(keyword);
         str = "&areacode_s="+areaCode+"&freeword="+encodeURIComponent(keyword);
-
     }
-    console.log(URL+str);
 
     const r =await fetch(URL+str);
     const data = await r.json();
-    //console.log(data);
 
-    //res.send(keyword);
-    res.send(data);
+    selectShopId=data["rest"].map((data)=> data["id"])
+     
+    console.log(selectShopId);
+    
+    if(exceptWord===undefined){
+        res.send(data["rest"]);
+    }else{
+    const uwasas=await db.Test.findAll({
+        where: {
+          shopid: selectShopId
+        },raw : true
+      },);
+    
+      console.log(uwasas);
+    
+    const exceptId=uwasas.filter(uwasa=>{
+        return uwasa["uwasa"].indexOf(exceptWord)!==-1;
+    }).map(uwasa=>{
+        return uwasa["shopid"];
+    });
+   
+    console.log(exceptId);
+    if(exceptId===[]){
+        console.log(exceptId);
+        res.send(data["rest"]);
+    }else{
+       const allList= data["rest"].filter(uwasa=>{
+            return exceptId.indexOf(uwasa["id"])===-1;
+        });
+        console.log(allList.length);
+        res.send(allList);
+    }    
+
+    }
+    
  });
 
 
