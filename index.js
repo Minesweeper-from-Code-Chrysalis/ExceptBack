@@ -30,6 +30,8 @@ app.get("/c",async function(req,res) {
         const Ob={};
         Ob["shopid"]=data['response'][key]["photo"]["shop_id"];
         Ob["uwasa"]=data['response'][key]["photo"]["comment"];
+        Ob["updatedAt"]=new Date().toDateString();
+        Ob["createdAt"]= new Date().toDateString();
         arr.push(Ob);
     };
     console.log(arr);
