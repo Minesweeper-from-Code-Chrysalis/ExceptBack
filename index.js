@@ -3,6 +3,12 @@ const app = express();
 const db = require("./models/index");
 global.fetch = require('node-fetch');
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
 app.get("/", function (req, res) {
     res.send("Hello World!");
 });
@@ -14,6 +20,21 @@ app.post("/create", function (req, res) {
     }).then(() => {
         res.send("Data Created.");
     });
+});
+
+app.get("/c",async function(req,res) { 
+    const s =await fetch("https://api.gnavi.co.jp/PhotoSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3&area="+encodeURIComponent("東京")+"&hit_per_page=50");    
+    const data = await s.json();
+    const arr=[];
+    for(let key=0; key<50;key++){
+        const Ob={};
+        Ob["shopid"]=data['response'][key]["photo"]["shop_id"];
+        Ob["uwasa"]=data['response'][key]["photo"]["comment"];
+        arr.push(Ob);
+    };
+    console.log(arr);
+    res.send(arr);
+
 });
 
 app.get("/shoptest",async function(req,res) { 
@@ -32,7 +53,7 @@ app.get("/shops",async function(req,res) {
     const URL="https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3"
     let str="";
     if(areaCode===undefined){
-        res.sendStatus(500);
+        res.sendStatus(400);
     }else if(keyword===undefined){
         str = "&areacode_s="+areaCode;
         console.log(keyword);
@@ -76,10 +97,7 @@ app.get("/shops",async function(req,res) {
         console.log(allList.length);
         res.send(allList);
     }    
-
-    }
-    
+    }   
  });
 
-
-app.listen(3000, () => console.log("Example app listening on port 3000!"));
+app.listen(3001, () => console.log("Example app listening on port 3001!"));
