@@ -20,8 +20,6 @@ app.get("/shoptest",async function(req,res) {
    const keyword=req.query.keyword;
    const exceptWord=req.query.exceptWord;
 
-   
-
     res.send(areaCode+keyword+exceptWord);
 });
 
@@ -36,16 +34,20 @@ app.get("/shops",async function(req,res) {
         res.sendStatus(500);
     }else if(keyword===undefined){
         str = "&areacode_s="+areaCode;
+        console.log(keyword);
     }else{
-        str = "&areacode_s="+areaCode+"&freeword="+keyword;
+        console.log(keyword);
+        str = "&areacode_s="+areaCode+"&freeword="+encodeURIComponent(keyword);
+
     }
     console.log(URL+str);
 
     const r =await fetch(URL+str);
     const data = await r.json();
-    console.log(data);
+    //console.log(data);
 
-     res.send(data);
+    //res.send(keyword);
+    res.send(data);
  });
 
 
