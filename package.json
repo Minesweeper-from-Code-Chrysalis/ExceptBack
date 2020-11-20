@@ -1,0 +1,16 @@
+{
+  "name": "ExceptBack",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/k2-takita-n/ExceptBack.git",
+  "author": "k2-takita-n <k2.takita.n@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg": "^8.5.1",
+    "sequelize": "^6.3.5"
+  },
+  "scripts": {
+    "sequelize": "sequelize"
+  }
+}
