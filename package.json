@@ -12,6 +12,8 @@
     "sequelize": "^6.3.5"
   },
   "scripts": {
-    "sequelize": "sequelize"
+    "sequelize": "sequelize",
+    "migrate": "yarn sequelize db:migrate:undo:all && yarn sequelize db:migrate",
+    "seed": "yarn sequelize db:seed:undo:all && yarn sequelize db:seed:all"
   }
 }

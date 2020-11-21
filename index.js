@@ -30,6 +30,8 @@ app.get("/c",async function(req,res) {
         const Ob={};
         Ob["shopid"]=data['response'][key]["photo"]["shop_id"];
         Ob["uwasa"]=data['response'][key]["photo"]["comment"];
+        Ob["updatedAt"]=new Date().toDateString();
+        Ob["createdAt"]= new Date().toDateString();
         arr.push(Ob);
     };
     console.log(arr);
@@ -50,7 +52,7 @@ app.get("/shops",async function(req,res) {
     const keyword=req.query.keyword;
     const exceptWord=req.query.exceptWord;
  
-    const URL="https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3"
+    const URL="https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3&hit_per_page=100"
     let str="";
     if(areaCode===undefined){
         res.sendStatus(400);
@@ -59,7 +61,7 @@ app.get("/shops",async function(req,res) {
         console.log(keyword);
     }else{
         console.log(keyword);
-        str = "&areacode_s="+areaCode+"&freeword="+encodeURIComponent(keyword);
+        str = "&areacode_l="+areaCode+"&freeword="+encodeURIComponent(keyword);
     }
 
     const r =await fetch(URL+str);
