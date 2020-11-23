@@ -66,20 +66,20 @@ const setupServer = () => {
       res.sendStatus(400);
     } else if (keyword === undefined) {
       str = `&areacode_s=${areaCode}`;
-      console.log(keyword);
     } else {
-      console.log(keyword);
       str = `&areacode_l=${areaCode}&freeword=${encodeURIComponent(keyword)}`;
     }
 
     const r = await fetch(URL + str);
     const data = await r.json();
 
-    console.log(data);
 
-    
-    selectShopId = data.rest.map(data => data.id);
-
+    if(data["error"]===undefined){
+        selectShopId = data.rest.map(data => data.id);
+        console.log(selectShopId);
+    }else{
+        res.sendStatus(400);
+    }
 
 
     if (exceptWord === undefined) {
