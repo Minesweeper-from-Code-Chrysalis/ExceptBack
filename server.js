@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const db = require("./models/index");
 global.fetch = require("node-fetch");
+const fs = require('fs');
 
 const setupServer = () => {
   app.use(function(req, res, next) {
@@ -19,8 +20,8 @@ const setupServer = () => {
 
   app.post("/create", function(req, res) {
     db.Test.create({
-      shopid: "6956991",
-      uwasa: "汚い"
+      shopid: 'gfbz503',
+      uwasa: "こってりしたとんこつラーメンがウリ"
     }).then(() => {
       res.send("Data Created.");
     });
@@ -45,6 +46,30 @@ const setupServer = () => {
 
     res.send(arr);
   });
+
+
+  app.get("/json", async function(req, res) {
+    const arr = [];
+    for (let i = 0; i < 20; i++) {
+    const s = await fetch(
+        `https://api.gnavi.co.jp/PhotoSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3&area=${encodeURIComponent(
+            "東京"
+          )}&hit_per_page=50&offset=${i*50+1}&vote_date=720`
+      );
+      const data = await s.json();
+      for (let key = 0; key < 50; key++) {
+        const Ob = {};
+        Ob.shopid = data.response[key].photo.shop_id;
+        Ob.uwasa = data.response[key].photo.comment;
+        Ob.updatedAt = new Date().toDateString();
+        Ob.createdAt = new Date().toDateString();
+        arr.push(Ob);
+      }
+    }
+      res.send(arr);
+  });
+
+
 
   app.get("/shoptest", async function(req, res) {
     const { areaCode } = req.query;
