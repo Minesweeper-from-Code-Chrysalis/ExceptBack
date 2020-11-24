@@ -8,6 +8,7 @@
   "dependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "dotenv": "^8.2.0",
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-config-problems": "^5.0.0",
@@ -25,6 +26,6 @@
     "migrate": "yarn sequelize db:migrate:undo:all && yarn sequelize db:migrate",
     "seed": "yarn sequelize db:seed:undo:all && yarn sequelize db:seed:all",
     "test": "mocha test && yarn lint",
-    "lint": "eslint --fix --ext .js ."  
+    "lint": "eslint --fix --ext .js ."
   }
 }

@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const db = require("./models/index");
 global.fetch = require("node-fetch");
+require("dotenv").config();
+
+const { env } = process;
 
 const setupServer = () => {
   app.use(function(req, res, next) {
@@ -28,9 +31,9 @@ const setupServer = () => {
 
   app.get("/c", async function(req, res) {
     const s = await fetch(
-      `https://api.gnavi.co.jp/PhotoSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3&area=${encodeURIComponent(
-        "東京"
-      )}&hit_per_page=50&vote_date=365`
+      `https://api.gnavi.co.jp/PhotoSearchAPI/v3/?keyid=${
+        env.KEY_ID
+      }&area=${encodeURIComponent("東京")}&hit_per_page=50&vote_date=365`
     );
     const data = await s.json();
     const arr = [];
@@ -77,9 +80,11 @@ const setupServer = () => {
       }
       for (let k = 0; k <= syou; k++) {
         const s = await fetch(
-          `https://api.gnavi.co.jp/PhotoSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3&area=${
-            a[l].a
-          }&hit_per_page=50&order=vote_date&sort=1&offset=${k * 50 + 1}`
+          `https://api.gnavi.co.jp/PhotoSearchAPI/v3/?keyid=${
+            env.KEY_ID
+          }&area=${a[l].a}&hit_per_page=50&order=vote_date&sort=1&offset=${k *
+            50 +
+            1}`
         );
         const data = await s.json();
         for (let key = 0; key < 50; key++) {
@@ -108,8 +113,7 @@ const setupServer = () => {
     const { keyword } = req.query;
     const { exceptWord } = req.query;
 
-    const URL =
-      "https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3&hit_per_page=100";
+    const URL = `https://api.gnavi.co.jp/RestSearchAPI/v3/?keyid=${env.KEY_ID}&hit_per_page=100`;
     let str = "";
     if (areaCode === undefined) {
       res.sendStatus(400);
