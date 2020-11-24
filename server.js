@@ -31,7 +31,7 @@ const setupServer = () => {
     const s = await fetch(
       `https://api.gnavi.co.jp/PhotoSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3&area=${encodeURIComponent(
         "東京"
-      )}&hit_per_page=50`
+      )}&hit_per_page=50&vote_date=365`
     );
     const data = await s.json();
     const arr = [];
@@ -46,6 +46,50 @@ const setupServer = () => {
 
     res.send(arr);
   });
+
+  app.get("/areal", async function(req, res) {
+    const s = await fetch(
+      `https://api.gnavi.co.jp/master/GAreaLargeSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3`
+    );
+    const data = await s.json();
+    const arr = data.garea_large.map((area)=>{return {"a":area.areacode_l, "b":area.pref.pref_code}});
+    const ar=arr.filter((area)=>area.b=="PREF13");
+    const a=[];
+    
+    for (let i =0;i<ar.length-1;i++) {
+    const s = await fetch(
+        `https://api.gnavi.co.jp/PhotoSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3&area=${ar[i]["a"]}&hit_per_page=50&vote_date=1000&order=vote_date&sort=1`
+    );
+    const data = await s.json();
+    const count=data["response"]["total_hit_count"];
+    console.log(count);
+    a.push({"a":ar[i]["a"],"b":count});
+  }
+
+  const final = [];
+
+for(let l in a){
+    syou = a[l]["b"]/50 | 0;
+    if(syou>20){
+        syou=20;
+    }
+  for (let k = 0; k <=syou; k++) {
+  const s = await fetch(
+      `https://api.gnavi.co.jp/PhotoSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3&area=${a[l]["a"]}&hit_per_page=50&order=vote_date&sort=1&offset=${k*50+1}`
+    );
+    const data = await s.json();
+    for (let key = 0; key < 50; key++) {
+      const Ob = {};
+      Ob.shopid = data.response[key].photo.shop_id;
+      Ob.uwasa = data.response[key].photo.comment;
+      Ob.updatedAt = new Date().toDateString();
+      Ob.createdAt = new Date().toDateString();
+      final.push(Ob);
+    }  
+  }
+}
+res.send(final);
+});
 
 
   app.get("/json", async function(req, res) {

@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       uwasa: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
