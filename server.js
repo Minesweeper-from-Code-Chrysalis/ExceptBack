@@ -90,7 +90,7 @@ const setupServer = () => {
     if (areaCode === undefined) {
       res.sendStatus(400);
     } else if (keyword === undefined) {
-      str = `&areacode_s=${areaCode}`;
+      str = `&areacode_l=${areaCode}`;
     } else {
       str = `&areacode_l=${areaCode}&freeword=${encodeURIComponent(keyword)}`;
     }
