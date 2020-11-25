@@ -52,7 +52,7 @@ const setupServer = () => {
   //データセットアップ用のソースコード。（テスト不要）
   app.get("/areal", async function(req, res) {
     const s = await fetch(
-      `https://api.gnavi.co.jp/master/GAreaLargeSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3`
+      `https://api.gnavi.co.jp/master/GAreaLargeSearchAPI/v3/?keyid=${env.KEY_ID}`
     );
     const data = await s.json();
     const arr = data.garea_large.map(area => {
@@ -63,7 +63,7 @@ const setupServer = () => {
 
     for (let i = 0; i < ar.length - 1; i++) {
       const s = await fetch(
-        `https://api.gnavi.co.jp/PhotoSearchAPI/v3/?keyid=9cba381f3c60076f4d986a0f6ee580b3&area=${ar[i].a}&hit_per_page=50&vote_date=1000&order=vote_date&sort=1`
+        `https://api.gnavi.co.jp/PhotoSearchAPI/v3/?keyid=${env.KEY_ID}&area=${ar[i].a}&hit_per_page=50&vote_date=1000&order=vote_date&sort=1`
       );
       const data = await s.json();
       const count = data.response.total_hit_count;
