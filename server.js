@@ -100,6 +100,30 @@ const setupServer = () => {
     res.send(final);
   });
 
+
+
+/*
+  app.get("/pac", async function(req, res) {
+      const final=[];
+      const s = await fetch(
+        `https://api.gnavi.co.jp/PhotoSearchAPI/v3/?keyid=${
+          env.KEY_ID
+        }&shop_id=gfa6100,gfa6102,a274815,ggrk900,gg4y103,gf56402,gegf400,gegf402,g739803&hit_per_page=50&order=vote_date&sort=1`);
+      const data = await s.json();
+      for (let key = 0; key < 10; key++) {
+        const Ob = {};
+        Ob.shopid = data.response[key].photo.shop_id;
+        Ob.uwasa = data.response[key].photo.comment;
+        Ob.updatedAt = new Date().toDateString();
+        Ob.createdAt = new Date().toDateString();
+        final.push(Ob);
+      }
+    
+  
+  res.send(final);
+});
+*/
+
   app.get("/shoptest", async function(req, res) {
     const { areaCode } = req.query;
     const { keyword } = req.query;
