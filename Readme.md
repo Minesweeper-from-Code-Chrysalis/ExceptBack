@@ -13,8 +13,7 @@
 
 ## このプロジェクトは？
 Exceptのバックエンド向けのProjectです。
-※フロント機能は下記に作成されています。
-
+※[フロント機能リンク](https://github.com/Minesweeper-from-Code-Chrysalis/ExceptFront)
 
 ぐるなびAPIからレストラン情報を取得後、
 Except側でPoolしている口コミ情報と突き合わせて、
@@ -34,15 +33,18 @@ yarn global add sequelize-cli
 **step1　Express疎通**
 
 - [ ] 疎通確認(GET)
-　- [ ] BackEndのシステムを実行
+
+ - [ ] BackEndのシステムを実行
 ```shell
   yarn start
 ```
-　- [ ] GET　　http://localhost:3001/
+
+ - [ ] GET　　http://localhost:3001/
 
 ---**step2　Postgresとの疎通**
 
 - [ ] .envファイルをプロジェクト直下に作成し、configで規定した変数を設定
+
 - [ ] DBを作成する
 
  ``` shell
@@ -62,7 +64,8 @@ yarn seed
 ``` 
 
 - [ ] 疎通確認(POST)
-　- [ ] POST　　http://localhost:3000/create
+
+ - [ ] POST　　http://localhost:3000/create
 
 **step3　ぐるなびAPIとの疎通+全体の疎通**
 
