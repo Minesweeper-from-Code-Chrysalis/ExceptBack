@@ -12,8 +12,8 @@
 
 ## サンプル
 
+ぐるなびAPIから応援口コミを取得
 ```js
-// ぐるなびAPIから応援口コミを取得
 const exampleGetGnaviComments = async () => {
   const region = process.env.AWS_REGION || "ap-northeast-1";
   const keyName = process.env.GNAVI_API_KEY_NAME;
@@ -24,4 +24,9 @@ const exampleGetGnaviComments = async () => {
 }
 
 exampleGetGnaviComments();
+```
+
+東京の応援口コミを1500件取得し、S3にjson形式で保存
+```js
+collectGnaviComments("東京", 1500);
 ```
