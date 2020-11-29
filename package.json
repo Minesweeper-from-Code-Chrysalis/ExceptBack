@@ -13,15 +13,10 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "lodash": "^4.17.20",
-    "node-fetch": "^2.6.1",
-    "pg": "^8.5.1",
-    "sequelize": "^6.3.5"
+    "node-fetch": "^2.6.1"
   },
   "scripts": {
-    "sequelize": "sequelize",
     "start": "node ./index.js",
-    "migrate": "yarn sequelize db:migrate:undo:all && yarn sequelize db:migrate",
-    "seed": "yarn sequelize db:seed:undo:all && yarn sequelize db:seed:all",
     "test": "mocha test && yarn lint",
     "lint": "eslint --fix --ext .js ."
   },
