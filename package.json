@@ -5,9 +5,14 @@
   "repository": "https://github.com/k2-takita-n/ExceptBack.git",
   "author": "k2-takita-n <k2.takita.n@gmail.com>",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
+    "@elastic/elasticsearch": "^7.10.0",
+    "aws-elasticsearch-connector": "^9.0.1",
+    "aws-sdk": "^2.799.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "lodash": "^4.17.20",
     "node-fetch": "^2.6.1",
     "pg": "^8.5.1",
     "sequelize": "^6.3.5"
