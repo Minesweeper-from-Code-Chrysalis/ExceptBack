@@ -6,16 +6,8 @@
   "author": "k2-takita-n <k2.takita.n@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "chai": "^4.2.0",
-    "chai-http": "^4.3.0",
     "dotenv": "^8.2.0",
-    "eslint": "^7.14.0",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-config-problems": "^5.0.0",
-    "eslint-plugin-prettier": "^3.1.4",
     "express": "^4.17.1",
-    "husky": "^4.3.0",
-    "mocha": "^8.2.1",
     "node-fetch": "^2.6.1",
     "pg": "^8.5.1",
     "sequelize": "^6.3.5"
@@ -27,5 +19,28 @@
     "seed": "yarn sequelize db:seed:undo:all && yarn sequelize db:seed:all",
     "test": "mocha test && yarn lint",
     "lint": "eslint --fix --ext .js ."
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-config-problems": "^5.0.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.5.2",
+    "mocha": "^8.2.1",
+    "prettier": "^2.2.1"
   }
 }

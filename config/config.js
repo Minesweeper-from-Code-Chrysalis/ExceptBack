@@ -1,4 +1,5 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 module.exports = {
   development: {
@@ -7,7 +8,7 @@ module.exports = {
     database: process.env.DB_DATABASE,
     host: process.env.DB_HOST,
     dialect: "postgres",
-    operatorsAliases: false
+    operatorsAliases: false,
   },
   test: {
     username: process.env.DB_USERNAME,
@@ -15,7 +16,7 @@ module.exports = {
     database: process.env.DB_DATABASE,
     host: process.env.DB_HOST,
     dialect: "postgres",
-    operatorsAliases: false
+    operatorsAliases: false,
   },
   production: {
     username: process.env.DB_USERNAME,
@@ -23,6 +24,6 @@ module.exports = {
     database: process.env.DB_DATABASE,
     host: process.env.DB_HOST,
     dialect: "postgres",
-    operatorsAliases: false
-  }
+    operatorsAliases: false,
+  },
 };
