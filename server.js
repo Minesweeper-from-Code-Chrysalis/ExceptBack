@@ -1,13 +1,30 @@
 const express = require("express");
 const app = express();
+const log4js = require("log4js");
 const db = require("./models/index");
 global.fetch = require("node-fetch");
 require("dotenv").config();
 
 const { env } = process;
 
+log4js.configure({
+  appenders: {
+    out: {
+      type: "stderr",
+    },
+  },
+  categories: {
+    default: {
+      appenders: ["out"],
+      level: "debug",
+    },
+  },
+});
+const logger = log4js.getLogger();
+
 const setupServer = () => {
-  app.use(function(req, res, next) {
+  app.use(log4js.connectLogger(logger));
+  app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
       "Access-Control-Allow-Headers",
@@ -16,20 +33,20 @@ const setupServer = () => {
     next();
   });
 
-  app.get("/", function(req, res) {
+  app.get("/", function (req, res) {
     res.send("Hello World!");
   });
 
-  app.post("/create", function(req, res) {
+  app.post("/create", function (req, res) {
     db.Test.create({
       shopid: "gfbz503",
-      uwasa: "こってりしたとんこつラーメンがウリ"
+      uwasa: "こってりしたとんこつラーメンがウリ",
     }).then(() => {
       res.send("Data Created.");
     });
   });
 
-  app.get("/c", async function(req, res) {
+  app.get("/c", async function (req, res) {
     const s = await fetch(
       `https://api.gnavi.co.jp/PhotoSearchAPI/v3/?keyid=${
         env.KEY_ID
@@ -50,15 +67,15 @@ const setupServer = () => {
   });
 
   //データセットアップ用のソースコード。（テスト不要）
-  app.get("/areal", async function(req, res) {
+  app.get("/areal", async function (req, res) {
     const s = await fetch(
       `https://api.gnavi.co.jp/master/GAreaLargeSearchAPI/v3/?keyid=${env.KEY_ID}`
     );
     const data = await s.json();
-    const arr = data.garea_large.map(area => {
+    const arr = data.garea_large.map((area) => {
       return { a: area.areacode_l, b: area.pref.pref_code };
     });
-    const ar = arr.filter(area => area.b === "PREF13");
+    const ar = arr.filter((area) => area.b === "PREF13");
     const a = [];
 
     for (let i = 0; i < ar.length - 1; i++) {
@@ -82,9 +99,9 @@ const setupServer = () => {
         const s = await fetch(
           `https://api.gnavi.co.jp/PhotoSearchAPI/v3/?keyid=${
             env.KEY_ID
-          }&area=${a[l].a}&hit_per_page=50&order=vote_date&sort=1&offset=${k *
-            50 +
-            1}`
+          }&area=${a[l].a}&hit_per_page=50&order=vote_date&sort=1&offset=${
+            k * 50 + 1
+          }`
         );
         const data = await s.json();
         for (let key = 0; key < 50; key++) {
@@ -100,9 +117,7 @@ const setupServer = () => {
     res.send(final);
   });
 
-
-
-/*
+  /*
   app.get("/pac", async function(req, res) {
       const final=[];
       const s = await fetch(
@@ -124,7 +139,7 @@ const setupServer = () => {
 });
 */
 
-  app.get("/shoptest", async function(req, res) {
+  app.get("/shoptest", async function (req, res) {
     const { areaCode } = req.query;
     const { keyword } = req.query;
     const { exceptWord } = req.query;
@@ -132,7 +147,7 @@ const setupServer = () => {
     res.send(areaCode + keyword + exceptWord);
   });
 
-  app.get("/shops", async function(req, res) {
+  app.get("/shops", async function (req, res) {
     const { areaCode } = req.query;
     const { keyword } = req.query;
     const { exceptWord } = req.query;
@@ -152,7 +167,7 @@ const setupServer = () => {
     let selectShopId = [];
 
     if (data.error === undefined) {
-      selectShopId = data.rest.map(data => data.id);
+      selectShopId = data.rest.map((data) => data.id);
       //   console.log(selectShopId);
     } else {
       res.sendStatus(400);
@@ -163,18 +178,18 @@ const setupServer = () => {
     } else {
       const uwasas = await db.Test.findAll({
         where: {
-          shopid: selectShopId
+          shopid: selectShopId,
         },
-        raw: true
+        raw: true,
       });
 
       // console.log(uwasas);
 
       const exceptId = uwasas
-        .filter(uwasa => {
+        .filter((uwasa) => {
           return uwasa.uwasa.indexOf(exceptWord) !== -1;
         })
-        .map(uwasa => {
+        .map((uwasa) => {
           return uwasa.shopid;
         });
 
@@ -183,7 +198,7 @@ const setupServer = () => {
         //console.log(exceptId);
         res.send(data.rest);
       } else {
-        const allList = data.rest.filter(uwasa => {
+        const allList = data.rest.filter((uwasa) => {
           return exceptId.indexOf(uwasa.id) === -1;
         });
         console.log(allList.length);
