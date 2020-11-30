@@ -10,8 +10,10 @@
     "@elastic/elasticsearch": "^7.10.0",
     "aws-elasticsearch-connector": "^9.0.1",
     "aws-sdk": "^2.799.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-validator": "^6.7.0",
     "lodash": "^4.17.20",
     "log4js": "^6.3.0",
     "node-fetch": "^2.6.1"

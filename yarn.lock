@@ -486,6 +486,14 @@ core-util-is@~1.0.0:
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
+cors@^2.8.5:
+  version "2.8.5"
+  resolved "https://registry.yarnpkg.com/cors/-/cors-2.8.5.tgz#eac11da51592dd86b9f06f6e7ac293b3df875d29"
+  integrity sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==
+  dependencies:
+    object-assign "^4"
+    vary "^1"
+
 cosmiconfig@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-7.0.0.tgz#ef9b44d773959cae63ddecd122de23853b60f8d3"
@@ -813,6 +821,14 @@ execa@^4.1.0:
     onetime "^5.1.0"
     signal-exit "^3.0.2"
     strip-final-newline "^2.0.0"
+
+express-validator@^6.7.0:
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/express-validator/-/express-validator-6.7.0.tgz#ca315efcc9dfe8d00cbc300f2d0fad1df82d07d6"
+  integrity sha512-sLnTFlyKEvesC2Fyn1TY4Q05cWCZHQQ1ijQOVbBG7hFeTKt4CNzttoF4t6CqrYroKa+2DOzj0E09odPIYDTbRg==
+  dependencies:
+    lodash "^4.17.20"
+    validator "^13.1.1"
 
 express@^4.17.1:
   version "4.17.1"
@@ -1566,6 +1582,11 @@ npm-run-path@^4.0.0:
   dependencies:
     path-key "^3.0.0"
 
+object-assign@^4:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
+  integrity sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=
+
 on-finished@~2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/on-finished/-/on-finished-2.3.0.tgz#20f1336481b083cd75337992a16971aa2d906947"
@@ -2263,7 +2284,12 @@ v8-compile-cache@^2.0.3:
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.2.0.tgz#9471efa3ef9128d2f7c6a7ca39c4dd6b5055b132"
   integrity sha512-gTpR5XQNKFwOd4clxfnhaqvfqMpqEwr4tOtCyz4MtYZX2JYhfr1JvBFKdS+7K/9rfpZR3VLX+YWBbKoxCgS43Q==
 
-vary@~1.1.2:
+validator@^13.1.1:
+  version "13.1.17"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-13.1.17.tgz#ad677736950adddd3c37209484a6b2e0966579ad"
+  integrity sha512-zL5QBoemJ3jYFb2/j38y7ljhwYGXVLUp8H6W1nVxadnAOvUOytec+L7BHh1oBQ82/TzWXHd+GSaxUWp4lROkLg==
+
+vary@^1, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
