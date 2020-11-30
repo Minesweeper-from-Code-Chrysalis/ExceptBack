@@ -50,7 +50,7 @@ jobs:
 
     - name: Test Get definition
       id: test-get-def
-      run: echo "${{ steps.task-def.outputs.task-definition }}"
+      run: cat "${{ steps.task-def.outputs.task-definition }}"
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
@@ -58,4 +58,4 @@ jobs:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
         service: ecs-Teleto-Teleto-service
         cluster: Teleto-cluster
-        wait-for-service-stability: true
+        wait-for-service-stability: false
