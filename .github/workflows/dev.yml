@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - feature/CICD_Test
+      - dev
 
 name: Deploy to Amazon ECS
 
@@ -48,14 +48,10 @@ jobs:
         container-name: Except-Backend
         image: ${{ steps.build-image.outputs.image }}
 
-    - name: Test Get definition
-      id: test-get-def
-      run: cat "${{ steps.task-def.outputs.task-definition }}"
-
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
         service: ecs-Teleto-Teleto-service
         cluster: Teleto-cluster
-        wait-for-service-stability: true
+        wait-for-service-stability: false
