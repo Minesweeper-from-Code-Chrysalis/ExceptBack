@@ -1,13 +1,31 @@
-import express from "express";
-import db from "./models/index";
-import fetch from "node-fetch";
+const express = require("express");
+const app = express();
+const log4js = require("log4js");
+const db = require("./models/index");
+global.fetch = require("node-fetch");
 import dotenv from "dotenv";
+import fetch from "node-fetch";
 
 dotenv.config();
-const app = express();
 const { env } = process;
 
+log4js.configure({
+  appenders: {
+    out: {
+      type: "stderr",
+    },
+  },
+  categories: {
+    default: {
+      appenders: ["out"],
+      level: "debug",
+    },
+  },
+});
+const logger = log4js.getLogger();
+
 const setupServer = () => {
+  app.use(log4js.connectLogger(logger));
   app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
