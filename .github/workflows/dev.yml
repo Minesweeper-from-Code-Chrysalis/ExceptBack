@@ -37,6 +37,7 @@ jobs:
           --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 \
           -f ./docker/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
     - name: Fill in the new image ID in the Amazon ECS task definition
@@ -46,6 +47,10 @@ jobs:
         task-definition: docker/task-definition.json
         container-name: Except-Backend
         image: ${{ steps.build-image.outputs.image }}
+
+    - name: Test Get definition
+      id: test-get-def
+      run: echo "${{ steps.task-def.outputs.task-definition }}"
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
