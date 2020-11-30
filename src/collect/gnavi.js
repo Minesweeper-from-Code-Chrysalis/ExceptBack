@@ -2,13 +2,14 @@ import AWS from "aws-sdk";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 import _ from "lodash";
-import { zeroPad } from "../common.js";
+import { zeroPad, getSSMParameter, concatURLQuery } from "../common.js";
 
 dotenv.config();
 
 const GNAVI_MAX_HIT_PER_PAGE = 50;
 const GNAVI_RECORD_PER_PAGE = 1000;
 const CHUNK_SIZE = 1000;
+const GNAVI_COMMENTS_URL = "https://api.gnavi.co.jp/PhotoSearchAPI/v3/";
 
 // 応援コメントのフィルター
 export const filterGnaviComments = async (data) => {
@@ -22,31 +23,19 @@ export const filterGnaviComments = async (data) => {
   });
 };
 
-// SystemsManagerからパラメータを取得
-export const getSSMParameter = async (region, name) => {
-  AWS.config.update({ region });
-  const ssm = new AWS.SSM();
-  const request = {
-    Name: name,
-    WithDecryption: true,
-  };
-  const res = await ssm.getParameter(request).promise();
-  return res.Parameter.Value;
-};
-
 // ぐるなびAPIからの口コミ情報取得
 export const getGnaviComments = async (apiKey, area, offset, filter) => {
-  const params = new URLSearchParams({
+  const params = {
     keyid: apiKey,
     hit_per_page: GNAVI_MAX_HIT_PER_PAGE,
     sort: 1, // 降順
     offset: offset % GNAVI_RECORD_PER_PAGE,
     offset_page: Math.floor(offset / GNAVI_RECORD_PER_PAGE) + 1,
     area,
-  });
+  };
 
   const fetchRes = await fetch(
-    `https://api.gnavi.co.jp/PhotoSearchAPI/v3/?${params}`
+    concatURLQuery(GNAVI_COMMENTS_URL, params)
   ).catch((err) => console.log(err));
   const data = await fetchRes.json().catch((err) => console.log(err));
   if (!data.response) {
