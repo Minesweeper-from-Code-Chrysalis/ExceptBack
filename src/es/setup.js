@@ -1,3 +1,4 @@
+import _ from "lodash";
 import dotenv from "dotenv";
 import AWS from "aws-sdk";
 import { generateClient } from "./client.js";
@@ -66,4 +67,12 @@ export const bulkLoad = async (start, end) => {
 
   const client = await generateClient(region, domainName);
   await client.bulk({ refresh: true, body });
+};
+
+// 一定の間隔でバルクロード
+export const batchBulkLoad = (start, end) => {
+  const batchRecords = 500;
+  _.range(start, end, 1000).map((_start) =>
+    bulkLoad(_start, _start + batchRecords)
+  );
 };
