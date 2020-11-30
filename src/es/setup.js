@@ -17,18 +17,12 @@ export const createIndex = async () => {
     body: {
       mappings: {
         properties: {
-          vote_id: {
+          shop_id: {
             type: "keyword",
           },
           shop_name: {
             type: "text",
             analyzer: "kuromoji",
-          },
-          shop_id: {
-            type: "keyword",
-          },
-          shop_url: {
-            type: "keyword",
           },
           menu_name: {
             type: "text",
@@ -37,9 +31,6 @@ export const createIndex = async () => {
           comment: {
             type: "text",
             analyzer: "kuromoji",
-          },
-          category: {
-            type: "keyword",
           },
         },
       },

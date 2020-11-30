@@ -14,13 +14,10 @@ const CHUNK_SIZE = 1000;
 export const filterGnaviComments = async (data) => {
   return Object.values(data).map((comment) => {
     return _.pick(comment.photo, [
-      "vote_id",
-      "shop_name",
       "shop_id",
-      "shop_url",
+      "shop_name",
       "menu_name",
       "comment",
-      "category",
     ]);
   });
 };
