@@ -58,4 +58,4 @@ jobs:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
         service: ecs-Teleto-Teleto-service
         cluster: Teleto-cluster
-        wait-for-service-stability: false
+        wait-for-service-stability: true
