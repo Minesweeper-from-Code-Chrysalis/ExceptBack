@@ -2,7 +2,12 @@ import AWS from "aws-sdk";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 import _ from "lodash";
-import { zeroPad, getSSMParameter, concatURLQuery } from "../common.js";
+import {
+  zeroPad,
+  getSSMParameter,
+  concatURLQuery,
+  TOKYO_AREA_LIST,
+} from "../common.js";
 
 dotenv.config();
 
@@ -12,36 +17,22 @@ const CHUNK_SIZE = 1000;
 const GNAVI_COMMENTS_URL = "https://api.gnavi.co.jp/PhotoSearchAPI/v3/";
 
 // 応援コメントのフィルター
-export const filterGnaviComments = async (data) => {
+export const filterGnaviComments = (data) => {
   return Object.values(data).map((comment) => {
-    return _.pick(comment.photo, [
-      "shop_id",
-      "shop_name",
-      "menu_name",
-      "comment",
-    ]);
+    return comment.photo;
   });
 };
 
 // ぐるなびAPIからの口コミ情報取得
-export const getGnaviComments = async (apiKey, area, offset, filter) => {
-  const params = {
-    keyid: apiKey,
-    hit_per_page: GNAVI_MAX_HIT_PER_PAGE,
-    sort: 1, // 降順
-    offset: offset % GNAVI_RECORD_PER_PAGE,
-    offset_page: Math.floor(offset / GNAVI_RECORD_PER_PAGE) + 1,
-    area,
-  };
-
+export const getGnaviComments = async (params, filter) => {
   const fetchRes = await fetch(
     concatURLQuery(GNAVI_COMMENTS_URL, params)
   ).catch((err) => console.log(err));
+  console.log("fetch!!!!!!");
   const data = await fetchRes.json().catch((err) => console.log(err));
   if (!data.response) {
     const err = {
-      offset,
-      area,
+      params,
       error: data.gnavi.error,
     };
     throw new Error(JSON.stringify(err));
@@ -67,11 +58,19 @@ export const collectGnaviComments = async (area, end, offset = 1) => {
   const comments = await _.range(offset, end, GNAVI_MAX_HIT_PER_PAGE).reduce(
     async (promise, _start) => {
       const _comments = await promise;
-      const c = await getGnaviComments(
-        apiKey,
+      const params = {
+        keyid: apiKey,
+        hit_per_page: GNAVI_MAX_HIT_PER_PAGE,
+        sort: 1, // 降順
+        offset: _start % GNAVI_RECORD_PER_PAGE,
+        offset_page: Math.floor(_start / GNAVI_RECORD_PER_PAGE) + 1,
         area,
-        _start,
-        filterGnaviComments
+      };
+      const c = await getGnaviComments(params, filterGnaviComments).catch(
+        (err) => {
+          console.log(err);
+          return Promise.resolve(_comments);
+        }
       );
       return Promise.resolve(_comments.concat(c));
     },
@@ -84,7 +83,10 @@ export const collectGnaviComments = async (area, end, offset = 1) => {
     const _end = _.min([end, _start + CHUNK_SIZE - 1]);
     const params = {
       Bucket: bucket,
-      Key: `gnavi_comments/${zeroPad(_start, 5)}_${zeroPad(_end, 5)}.json`,
+      Key: `gnavi_comments/${area}/${zeroPad(_start, 5)}_${zeroPad(
+        _end,
+        5
+      )}.json`,
       Body: JSON.stringify(arr),
     };
     await s3
@@ -92,14 +94,13 @@ export const collectGnaviComments = async (area, end, offset = 1) => {
       .promise()
       .catch((err) => console.log(err));
   });
+  return comments;
 };
 
-// 一定の間隔でcollectを実施
-export const batchCollect = (area, start, end) => {
-  // 本来的にはGNAVI_RECORD_PER_PAGEで良いはずだがぐるなびAPI側で400エラーが出る
-  // batchCollect("東京", 1, 10000)
-  const batchRecords = 500;
-  _.range(start, end, GNAVI_RECORD_PER_PAGE).map((_start) =>
-    collectGnaviComments(area, _start + batchRecords, _start)
-  );
+// 東京の口コミ情報を1000件ずつ取得
+export const tokyoCommentsCollect = async (start = 1, end = 1000) => {
+  const areas = TOKYO_AREA_LIST;
+  areas.map((area) => {
+    return collectGnaviComments(area, end, start);
+  });
 };

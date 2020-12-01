@@ -2,6 +2,21 @@ import _ from "lodash";
 import log4js from "log4js";
 import AWS from "aws-sdk";
 
+export const TOKYO_AREA_LIST = [
+  "銀座",
+  "有楽町",
+  "築地",
+  "新橋",
+  "浜松町",
+  "田町",
+  "赤坂",
+  "六本木",
+  "麻布",
+  "飯田橋",
+  "四ツ谷",
+  "神楽坂",
+];
+
 // 数値のゼロパディング
 export const zeroPad = (num, length) => {
   return _.padStart(num.toString(), length, "0");

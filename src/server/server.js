@@ -63,9 +63,12 @@ export const setupServer = () => {
       const searchBody = {
         query: {
           bool: {
-            must_not: exceptWord.split(",").map((word) => {
-              return { match: { comments: word } };
-            }),
+            should: exceptWord.split(",").reduce((arr, word) => {
+              return arr.concat([
+                { match: { comment: word } },
+                { match: { shop_name: word } },
+              ]);
+            }, []),
           },
         },
       };
@@ -80,11 +83,17 @@ export const setupServer = () => {
       );
 
       const filteredShopList = shopList.rest.filter((rest) => {
-        return !exceptShopIds.includes(rest.id);
+        // 除外店舗一覧に含まれる店舗を除外
+        let isExcept = exceptShopIds.includes(rest.id);
+
+        // 店舗名に除外ワードが含まれる店舗を除外
+        exceptWord.split(",").forEach((exWord) => {
+          isExcept = isExcept || rest.name.includes(exWord);
+        });
+        return !isExcept;
       });
       return res.send(filteredShopList);
     }
   );
-
   return app;
 };

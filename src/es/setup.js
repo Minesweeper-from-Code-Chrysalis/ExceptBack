@@ -38,8 +38,23 @@ export const createIndex = async () => {
   });
 };
 
+// 応援コメントのフィルター
+// ※本来はLogStashなどを利用するべきであり、一時的な利用に限定
+export const commentsDocumentFilter = (comments) => {
+  return comments.map((comment) => {
+    const filtered = _.pick(comment, [
+      "shop_id",
+      "shop_name",
+      "menu_name",
+      "comment",
+    ]);
+    filtered.id = comment.vote_id;
+    return filtered;
+  });
+};
+
 // S3のjsonファイルをElasticSearchServiceにバルクロード
-export const bulkLoad = async (start, end) => {
+export const bulkLoad = async (start, end, area, filter) => {
   const region = process.env.AWS_REGION || "ap-northeast-1";
   AWS.config.update({ region });
   const bucket = process.env.S3_BUCKET;
@@ -47,23 +62,12 @@ export const bulkLoad = async (start, end) => {
 
   const params = {
     Bucket: bucket,
-    Key: `gnavi_comments/${zeroPad(start, 5)}_${zeroPad(end, 5)}.json`,
+    Key: `gnavi_comments/${area}/${zeroPad(start, 5)}_${zeroPad(end, 5)}.json`,
   };
   const res = await s3.getObject(params).promise();
-  const dataset = s3BodyToJson(res.Body);
-  const body = dataset.flatMap((doc) => [
-    { index: { _index: "comments" } },
-    doc,
-  ]);
+  const dataset = filter(s3BodyToJson(res.Body));
+  const body = dataset.flatMap((doc) => [{ index: { _index: index } }, doc]);
 
   const client = await generateClient(region, domainName);
   await client.bulk({ refresh: true, body });
-};
-
-// 一定の間隔でバルクロード
-export const batchBulkLoad = (start, end) => {
-  const batchRecords = 500;
-  _.range(start, end, 1000).map((_start) =>
-    bulkLoad(_start, _start + batchRecords)
-  );
 };
