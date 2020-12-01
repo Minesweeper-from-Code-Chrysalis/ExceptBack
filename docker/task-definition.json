@@ -25,7 +25,12 @@
       "command": null,
       "linuxParameters": null,
       "cpu": 0,
-      "environment": [],
+      "environment": [
+          { "name" : "AWS_REGION ", "value" : "ap-northeast-1" },
+          { "name" : "S3_BUCKET", "value" : "teleto-dev-s3-except" },
+          { "name" : "GNAVI_API_KEY_NAME", "value" : "KEY_ID" },
+          { "name" : "ES_DOMAIN_NAME", "value" : "sample-domain" }
+      ],
       "resourceRequirements": null,
       "ulimits": null,
       "dnsServers": null,
