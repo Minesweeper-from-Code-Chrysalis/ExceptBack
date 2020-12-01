@@ -14,7 +14,7 @@ const { query, validationResult } = expressValidator;
 
 const logger = createLogger();
 const GNAVI_RESTAURANT_URL = "https://api.gnavi.co.jp/RestSearchAPI/v3/";
-const DEFAULT_HIT_PER_PAGE = 3;
+const DEFAULT_HIT_PER_PAGE = 20;
 const { AWS_REGION, GNAVI_API_KEY_NAME, ES_DOMAIN_NAME } = process.env;
 const index = "comments";
 
@@ -42,7 +42,6 @@ export const setupServer = () => {
         return res.status(400).send({ errorMessages: errors.array() });
       }
 
-      console.log("validate - 1");
       // クエリパラメータを設定
       const API_KEY = await getSSMParameter(AWS_REGION, GNAVI_API_KEY_NAME);
       const params = {
@@ -54,9 +53,6 @@ export const setupServer = () => {
         params.freeword = keyword;
       }
 
-      console.log("validate - 2");
-      console.log(params);
-
       // ぐるなびAPIのfetch
       const fetchURL = concatURLQuery(GNAVI_RESTAURANT_URL, params);
       const fetchRes = await fetch(fetchURL).catch((err) =>
@@ -65,8 +61,6 @@ export const setupServer = () => {
       const shopList = await fetchRes
         .json()
         .catch((err) => res.status(500).send(err));
-
-      console.log("validate - 3");
 
       if (!exceptWord) {
         return res.send(shopList.rest);
@@ -85,19 +79,18 @@ export const setupServer = () => {
         },
       };
 
-      console.log("validate - 4");
-
       const exceptShopList = await search(
         AWS_REGION,
         ES_DOMAIN_NAME,
         index,
         searchBody
       ).catch((err) => res.status(500).send(err));
+      console.log(searchBody);
+      console.log(exceptShopList.body);
+
       const exceptShopIds = exceptShopList.body.hits.hits.map(
         (shop) => shop._source.shop_id
       );
-
-      console.log("validate - 5");
 
       const filteredShopList = shopList.rest.filter((rest) => {
         // 除外店舗一覧に含まれる店舗を除外
