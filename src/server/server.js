@@ -14,7 +14,7 @@ const { query, validationResult } = expressValidator;
 
 const logger = createLogger();
 const GNAVI_RESTAURANT_URL = "https://api.gnavi.co.jp/RestSearchAPI/v3/";
-const DEFAULT_HIT_PER_PAGE = 10;
+const DEFAULT_HIT_PER_PAGE = 100;
 const { AWS_REGION, GNAVI_API_KEY_NAME, ES_DOMAIN_NAME } = process.env;
 const index = "comments";
 
