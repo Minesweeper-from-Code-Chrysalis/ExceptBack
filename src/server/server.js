@@ -4,12 +4,13 @@ import dotenv from "dotenv";
 import fetch from "node-fetch";
 import cors from "cors";
 import log4js from "log4js";
-import { query, validationResult } from "express-validator";
+import expressValidator from "express-validator";
 import { search } from "../es/search.js";
 import { createLogger, concatURLQuery, getSSMParameter } from "../common.js";
 
 dotenv.config();
 const app = express();
+const { query, validationResult } = expressValidator;
 
 const logger = createLogger();
 const GNAVI_RESTAURANT_URL = "https://api.gnavi.co.jp/RestSearchAPI/v3/";
