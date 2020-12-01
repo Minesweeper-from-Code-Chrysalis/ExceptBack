@@ -14,7 +14,7 @@ const { query, validationResult } = expressValidator;
 
 const logger = createLogger();
 const GNAVI_RESTAURANT_URL = "https://api.gnavi.co.jp/RestSearchAPI/v3/";
-const DEFAULT_HIT_PER_PAGE = 100;
+const DEFAULT_HIT_PER_PAGE = 10;
 const { AWS_REGION, GNAVI_API_KEY_NAME, ES_DOMAIN_NAME } = process.env;
 const index = "comments";
 
@@ -36,7 +36,13 @@ export const setupServer = () => {
       query("upperBudget").exists().withMessage("予算の上限値は必須です"),
     ],
     async (req, res) => {
-      const { areaCode, keyword, exceptWord } = req.query;
+      const {
+        areaCode,
+        keyword,
+        exceptWord,
+        lowerBudget,
+        upperBudget,
+      } = req.query;
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).send({ errorMessages: errors.array() });
@@ -58,12 +64,17 @@ export const setupServer = () => {
       const fetchRes = await fetch(fetchURL).catch((err) =>
         res.status(500).send(err)
       );
-      const shopList = await fetchRes
+      const fetchResList = await fetchRes
         .json()
         .catch((err) => res.status(500).send(err));
 
+      // 予算内のレストランに絞る
+      const resList = fetchResList.rest.filter((rest) => {
+        return rest.budget >= lowerBudget && rest.budget <= upperBudget;
+      });
+
       if (!exceptWord) {
-        return res.send(shopList.rest);
+        return res.send(resList);
       }
 
       const searchBody = {
@@ -90,7 +101,7 @@ export const setupServer = () => {
         (shop) => shop._source.shop_id
       );
 
-      const filteredShopList = shopList.rest.filter((rest) => {
+      const filteredShopList = resList.filter((rest) => {
         // 除外店舗一覧に含まれる店舗を除外
         let isExcept = exceptShopIds.includes(rest.id);
 
