@@ -94,9 +94,10 @@ export const setupServer = () => {
         // 除外店舗一覧に含まれる店舗を除外
         let isExcept = exceptShopIds.includes(rest.id);
 
-        // 店舗名に除外ワードが含まれる店舗を除外
+        // 店舗名・カテゴリに除外ワードが含まれる店舗を除外
         exceptWord.split(",").forEach((exWord) => {
           isExcept = isExcept || rest.name.includes(exWord);
+          isExcept = isExcept || rest.category.includes(exWord);
         });
         return !isExcept;
       });
