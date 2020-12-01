@@ -22,16 +22,14 @@ export const setupServer = () => {
   app.use(log4js.connectLogger(logger));
   app.use(cors());
 
-  app.get("/", (req, res) => {
-    res.send("Hello World!");
-  });
-
   app.get(
     "/shops",
     [
       query("areaCode").exists().notEmpty().withMessage("検索エリアは必須です"),
-      query("lowerBudget").isInt(),
-      query("upperBudget").isInt(),
+      query("keyword").optional({ nullable: true }).isString(),
+      query("exceptWord").optional({ nullable: true }).isString(),
+      query("lowerBudget").exists().isInt(),
+      query("upperBudget").exists().isInt(),
     ],
     async (req, res) => {
       const { areaCode, keyword, exceptWord } = req.query;
