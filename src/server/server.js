@@ -14,7 +14,7 @@ const { query, validationResult } = expressValidator;
 
 const logger = createLogger();
 const GNAVI_RESTAURANT_URL = "https://api.gnavi.co.jp/RestSearchAPI/v3/";
-const DEFAULT_HIT_PER_PAGE = 100;
+const DEFAULT_HIT_PER_PAGE = 3;
 const { AWS_REGION, GNAVI_API_KEY_NAME, ES_DOMAIN_NAME } = process.env;
 const index = "comments";
 
@@ -32,11 +32,12 @@ export const setupServer = () => {
       query("areaCode").exists().notEmpty().withMessage("検索エリアは必須です"),
       query("keyword").optional({ nullable: true }).isString(),
       query("exceptWord").optional({ nullable: true }).isString(),
-      query("lowerBudget").exists().isInt(),
-      query("upperBudget").exists().isInt(),
+      query("lowerBudget").exists().withMessage("予算の下限値は必須です"),
+      query("upperBudget").exists().withMessage("予算の上限値は必須です"),
     ],
     async (req, res) => {
       const { areaCode, keyword, exceptWord } = req.query;
+      console.log(req.query);
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).send({ errorMessages: errors.array() });
