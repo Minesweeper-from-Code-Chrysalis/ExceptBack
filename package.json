@@ -5,27 +5,45 @@
   "repository": "https://github.com/k2-takita-n/ExceptBack.git",
   "author": "k2-takita-n <k2.takita.n@gmail.com>",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
+    "@elastic/elasticsearch": "^7.10.0",
+    "aws-elasticsearch-connector": "^9.0.1",
+    "aws-sdk": "^2.799.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.7.0",
+    "lodash": "^4.17.20",
+    "log4js": "^6.3.0",
+    "node-fetch": "^2.6.1"
+  },
+  "scripts": {
+    "start": "node ./index.js",
+    "test": "mocha test && yarn lint",
+    "lint": "eslint --fix --ext .js ."
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "dotenv": "^8.2.0",
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-config-problems": "^5.0.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "express": "^4.17.1",
     "husky": "^4.3.0",
+    "lint-staged": "^10.5.2",
     "mocha": "^8.2.1",
-    "node-fetch": "^2.6.1",
-    "pg": "^8.5.1",
-    "sequelize": "^6.3.5"
-  },
-  "scripts": {
-    "sequelize": "sequelize",
-    "start": "node ./index.js",
-    "migrate": "yarn sequelize db:migrate:undo:all && yarn sequelize db:migrate",
-    "seed": "yarn sequelize db:seed:undo:all && yarn sequelize db:seed:all",
-    "test": "mocha test && yarn lint",
-    "lint": "eslint --fix --ext .js ."
+    "prettier": "^2.2.1"
   }
 }
