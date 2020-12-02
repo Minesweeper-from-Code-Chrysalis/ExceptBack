@@ -28,7 +28,7 @@
       "environment": [
           { "name" : "AWS_REGION ", "value" : "ap-northeast-1" },
           { "name" : "S3_BUCKET", "value" : "teleto-dev-s3-except" },
-          { "name" : "GNAVI_API_KEY_NAME", "value" : "KEY_ID" },
+          { "name" : "GNAVI_API_KEY_NAME", "value" : "NEW_KEY_ID" },
           { "name" : "ES_DOMAIN_NAME", "value" : "sample-domain" }
       ],
       "resourceRequirements": null,
